@@ -24,11 +24,11 @@ class Map:
         self.get_map()
 
     def get_map(self):
-        for j, row in enumerate(mini_map):
-            for i, value in enumerate(row):
+        for y, row in enumerate(mini_map):
+            for x, value in enumerate(row):
                 if value:
-                    self.world_map[(j, i)] = value
+                    self.world_map[(x, y)] = value
 
     def draw(self):
-        [pg.draw.rect(self.game.screen, 'darkgray', (pos[1] * 30, pos[0] * 30, 30, 30), 4)
-         for pos in self.world_map]
+        [pg.draw.rect(self.game.screen, 'darkgray', (x * 30, y * 30, 30, 30))
+         for x,y in self.world_map]
