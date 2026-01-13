@@ -20,7 +20,7 @@ class RayCasting:
             # horizontal
             y_hor, dy = (y_map + 1, 1) if sin_a > 0 else (y_map - 1e-6, -1)
 
-            depth_hor = (y_hor - o_x) / cos_a
+            depth_hor = (y_hor - o_y) / sin_a
             x_hor = o_x + depth_hor * cos_a
 
             delta_depth = dy / sin_a
