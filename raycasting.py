@@ -1,7 +1,7 @@
 import math
 import pygame as pg
 
-from src.settings import HALF_FOV, MAX_DEPTH, NUM_RAYS, DELTA_ANGLE
+from src.settings import HALF_FOV, MAX_DEPTH, NUM_RAYS, DELTA_ANGLE, SCREEN_DIST, SCALE, HEIGHT
 
 
 class RayCasting:
@@ -14,7 +14,7 @@ class RayCasting:
 
         ray_angle = self.game.player.angle - HALF_FOV + 0.0001
 
-        for i in range(NUM_RAYS):
+        for ray in range(NUM_RAYS):
             sin_a = math.sin(ray_angle)
             cos_a = math.cos(ray_angle)
             # horizontal
@@ -57,10 +57,23 @@ class RayCasting:
             else:
                 depth = depth_hor
 
-            # draw for debug
-            pg.draw.line(self.game.screen, 'yellow', (30 * o_x, 30 * o_y),
-                         (30 * o_x + 30 * depth * cos_a, 30 * o_y + 30 * depth * sin_a), 2
-                         )
+            # ----------------- 3D --------------------------
+            proj_height = SCREEN_DIST / (depth + 0.0001)
+
+            # removing fishbowl effect
+            depth *= math.cos(self.game.player.angle - ray_angle)
+
+            # draw walls
+            color = [255/(1 + depth ** 5 * 0.00002)] * 3
+
+            pg.draw.rect(self.game.screen, color,
+                         (ray * SCALE, (HEIGHT//2) - proj_height // 2, SCALE, proj_height))
+
+            # # draw for debug
+            # pg.draw.line(self.game.screen, 'yellow', (30 * o_x, 30 * o_y),
+            #              (30 * o_x + 30 * depth * cos_a, 30 * o_y + 30 * depth * sin_a), 2
+            #              )
+
             ray_angle += DELTA_ANGLE
 
     def update(self):
